@@ -10,8 +10,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.ucne.parcial2.ui.navegacion.DrawerMenu
+import com.ucne.parcial2.ui.navegacion.ScreenModule
 import com.ucne.parcial2.ui.theme.Parcial2Theme
+import com.ucne.parcial2.ui.ticket.TicketScreen
+import com.ucne.parcial2.ui.ticket.TicketsListScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,22 +33,33 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = ScreenModule.Start.route
+                    ) {
+                        composable(ScreenModule.Start.route) {
+                            DrawerMenu(navController = navController)
+                        }
+                        composable(route = ScreenModule.TicketsList.route) {
+                            TicketsListScreen(navController = navController) { id ->
+                                navController.navigate(ScreenModule.Tickets.route + "/${id}")
+                            }
+                        }
+                        composable(
+                            route = ScreenModule.Tickets.route + "/{id}",
+                            arguments = listOf(navArgument("id") { type = NavType.IntType })
+                        ) { capturar ->
+                            val ticketId = capturar.arguments?.getInt("id") ?: 0
+
+                            TicketScreen(ticketId = ticketId, navController = navController) {
+                                navController.navigate(ScreenModule.TicketsList.route)
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    Parcial2Theme {
-        Greeting("Android")
-    }
-}
