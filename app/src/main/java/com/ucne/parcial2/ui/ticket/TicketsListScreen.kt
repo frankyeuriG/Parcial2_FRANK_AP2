@@ -125,12 +125,12 @@ fun TicketRow(ticket: TicketDto, onTicketClick: (Int) -> Unit) {
                     text = ticket.empresa.foldIndexed("") { index, acc, c ->
                         if (index % 20 == 0 && index > 0) "$acc\n$c" else "$acc$c"
                     },
-                    fontSize = 35.sp,
+                    fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(3f)
                 )
                 Text(
-                    text = ticket.fecha.substring(0, 10), fontSize = 25.sp,
+                    text = ticket.fecha.substring(0, 10), fontSize = 20.sp,
                     fontWeight = FontWeight.Black,
                     textAlign = TextAlign.End,
                     modifier = Modifier.weight(3f)

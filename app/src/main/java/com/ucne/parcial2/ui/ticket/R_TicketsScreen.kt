@@ -144,10 +144,10 @@ private fun TicketBody(
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth(),
-                    value = viewModel.encargado,
+                    value = viewModel.encargadoId,
                     singleLine = true,
                     maxLines = 1,
-                    onValueChange = { viewModel.encargado = it },
+                    onValueChange = { viewModel.encargadoId = it },
                     label = { Text("EncargadoId") }
                 )
 
@@ -185,7 +185,7 @@ private fun TicketBody(
                             )
                         },
                         onClick = {
-                            viewModel.postTicket()
+                            viewModel.postTickets()
                         }
                     )
                 }

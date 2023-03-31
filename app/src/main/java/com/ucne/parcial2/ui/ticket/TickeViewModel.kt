@@ -40,7 +40,7 @@ class TicketApiViewModel @Inject constructor(
     var estatus by mutableStateOf("")
     var fecha by mutableStateOf("")
     var orden by mutableStateOf("")
-    var encargado by mutableStateOf("")
+    var encargadoId by mutableStateOf("")
 
     var uiState = MutableStateFlow(TicketsListState())
         private set
@@ -94,40 +94,41 @@ class TicketApiViewModel @Inject constructor(
         viewModelScope.launch {
             ticketRepository.putTickets(
                 ticketId, TicketDto(
+                    ticketId = ticketId,
                     asunto,
                     empresa,
                     uiStateTicket.value.ticket!!.encargadoId,
                     especificaciones,
-                    estatus, uiStateTicket.value.ticket!!.fecha,
-                    uiStateTicket.value.ticket!!.orden,
-                    ticketId = ticketId
+                    estatus,
+                    uiStateTicket.value.ticket!!.fecha,
+                    uiStateTicket.value.ticket!!.orden
                 )
             )
         }
     }
 
-    fun postTicket() {
-        viewModelScope.launch {
-            ticketRepository.postTickets(
-                TicketDto(
-                   empresa = empresa,
-                    asunto = asunto,
-                    encargadoId = encargado.toIntOrNull()?: 0,
-                    especificaciones = especificaciones,
-                    fecha = fecha,
-                    orden = orden.toIntOrNull()?: 0,
-                    estatus = estatus,
-                    ticketId = 10
-                )
-            )
-        }
-    }
-
+  fun postTickets(){
+      viewModelScope.launch {
+          TicketDto(
+              asunto = asunto,
+              empresa = empresa,
+              encargadoId = encargadoId.toIntOrNull()?: 0,
+              especificaciones = especificaciones,
+              estatus = estatus,
+              fecha = fecha,
+              orden = orden.toIntOrNull()?: 0
+          )
+      }
+      Limpiar()
+  }
 
     private fun Limpiar() {
-        empresa = ""
         asunto = ""
-        estatus = ""
+        empresa = ""
+        encargadoId = ""
         especificaciones = ""
+        estatus = ""
+        fecha  = ""
+        orden = ""
     }
 }
