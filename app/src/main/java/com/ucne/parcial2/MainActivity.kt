@@ -6,18 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.ucne.parcial2.ui.navegacion.DrawerMenu
 import com.ucne.parcial2.ui.navegacion.ScreenModule
 import com.ucne.parcial2.ui.theme.Parcial2Theme
+import com.ucne.parcial2.ui.ticket.R_TicketsScreen
 import com.ucne.parcial2.ui.ticket.TicketScreen
 import com.ucne.parcial2.ui.ticket.TicketsListScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,15 +33,15 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = ScreenModule.Start.route
+                        startDestination = ScreenModule.TicketsList.route
                     ) {
-                        composable(ScreenModule.Start.route) {
-                            DrawerMenu(navController = navController)
-                        }
                         composable(route = ScreenModule.TicketsList.route) {
                             TicketsListScreen(navController = navController) { id ->
                                 navController.navigate(ScreenModule.Tickets.route + "/${id}")
                             }
+                        }
+                        composable(ScreenModule.R_ticktes.route){
+                            R_TicketsScreen()
                         }
                         composable(
                             route = ScreenModule.Tickets.route + "/{id}",

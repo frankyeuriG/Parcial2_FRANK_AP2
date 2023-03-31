@@ -6,7 +6,6 @@ import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.*
@@ -20,26 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.ucne.parcial2.ui.navegacion.ScreenModule
-import kotlinx.coroutines.launch
 import java.util.*
 
-
 @Composable
-fun TicketScreen(
-    navController: NavController,
-    ticketId: Int,
-    viewModel: TicketApiViewModel = hiltViewModel(),
-    onSaveClick: () -> Unit
+fun R_TicketsScreen(
+    viewModel: TicketApiViewModel = hiltViewModel()
 ) {
-    remember {
-        viewModel.TicketbyId(ticketId)
-        0
-    }
     Column(Modifier.fillMaxWidth()) {
-        TicketBody(viewModel = viewModel, navController = navController) {
-            onSaveClick()
-        }
+        TicketBody(viewModel = viewModel)
     }
 }
 
@@ -47,12 +34,9 @@ fun TicketScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TicketBody(
-    navController: NavController,
-    viewModel: TicketApiViewModel,
-    onSaveClick: () -> Unit
+    viewModel: TicketApiViewModel
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
     val anio: Int
     val mes: Int
     val dia: Int
@@ -144,6 +128,29 @@ private fun TicketBody(
                     label = { Text(text = "Estatus") },
                     onValueChange = { viewModel.estatus = it })
 
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
+                    value = viewModel.orden,
+                    singleLine = true,
+                    maxLines = 1,
+                    onValueChange = { viewModel.orden = it },
+                    label = { Text("Orden") }
+                )
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
+                    value = viewModel.encargado,
+                    singleLine = true,
+                    maxLines = 1,
+                    onValueChange = { viewModel.encargado = it },
+                    label = { Text("EncargadoId") }
+                )
+
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -178,8 +185,7 @@ private fun TicketBody(
                             )
                         },
                         onClick = {
-                            viewModel.putTicket()
-                            onSaveClick()
+                            viewModel.postTicket()
                         }
                     )
                 }
@@ -187,3 +193,4 @@ private fun TicketBody(
         }
     }
 }
+

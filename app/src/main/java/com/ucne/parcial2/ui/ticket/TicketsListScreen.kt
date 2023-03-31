@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.twotone.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -33,20 +35,10 @@ fun TicketsListScreen(
     onTicketClick: (Int) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    Column(Modifier.fillMaxWidth()) {
-        Icon(
-            imageVector = Icons.Filled.ArrowBack,
-            contentDescription = null,
-            modifier = Modifier
-                .size(100.dp, 100.dp)
-                .padding(4.dp)
-                .wrapContentSize(Alignment.TopStart)
-                .clickable {
-                    scope.launch {
-                        navController.navigate(ScreenModule.Start.route)
-                    }
-                }
-        )
+    Column(
+        Modifier
+            .fillMaxWidth()
+    ) {
         Scaffold(
             modifier = Modifier
                 .fillMaxWidth()
@@ -61,22 +53,30 @@ fun TicketsListScreen(
                                 fontSize = 40.sp,
                                 style = MaterialTheme.typography.headlineLarge
                             )
+                            Icon(
+                                imageVector = Icons.Filled.Refresh,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(40.dp, 50.dp)
+                                    .padding(4.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            navController.navigate(ScreenModule.TicketsList.route)
+                                        }
+                                    }
+                            )
                             Spacer(modifier = Modifier.padding(10.dp))
-                            FloatingActionButton(
-                                onClick = { navController.navigate(ScreenModule.TicketsList.route) }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.TwoTone.Autorenew,
-                                    contentDescription = "Actualizar",
-                                    tint = Color.Green
-                                )
-
-                            }
-                            Spacer(modifier = Modifier.padding(5.dp))
                         }
                     }
                 )
-            }
+            }, floatingActionButton = {
+                FloatingActionButton(
+                    onClick = { navController.navigate(ScreenModule.R_ticktes.route)}
+                ) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Save")
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End
         ) {
             val uiState by viewModel.uiState.collectAsState()
             Box(
@@ -136,9 +136,6 @@ fun TicketRow(ticket: TicketDto, onTicketClick: (Int) -> Unit) {
                     modifier = Modifier.weight(3f)
                 )
             }
-
-            Spacer(modifier = Modifier.padding(10.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -194,11 +191,9 @@ fun TicketRow(ticket: TicketDto, onTicketClick: (Int) -> Unit) {
                 )
             }
         }
-        Spacer(modifier = Modifier.padding(10.dp))
         Divider(
             Modifier
                 .fillMaxWidth()
-                .size(15.dp)
         )
     }
 }

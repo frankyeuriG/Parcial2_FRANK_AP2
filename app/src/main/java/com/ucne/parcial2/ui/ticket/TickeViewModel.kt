@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ucne.parcial2.data.remote.TicketsApi
 import com.ucne.parcial2.data.remote.dto.TicketDto
 import com.ucne.parcial2.data.repository.TicketRepositoryImp
 import com.ucne.parcial2.util.Resource
@@ -23,24 +22,25 @@ data class TicketsListState(
     val tickets: List<TicketDto> = emptyList(),
     val error: String = ""
 )
+
 data class TicketsState(
     val isLoading: Boolean = false,
-    val ticket: TicketDto? =  null,
+    val ticket: TicketDto? = null,
     val error: String = ""
 )
+
 @HiltViewModel
 class TicketApiViewModel @Inject constructor(
-
-    private val ticketRepository: TicketRepositoryImp,
-    private val ticketsApi: TicketsApi
-
+    private val ticketRepository: TicketRepositoryImp
 ) : ViewModel() {
     var ticketId by mutableStateOf(0)
     var empresa by mutableStateOf("")
     var asunto by mutableStateOf("")
-    var especificaciones by mutableStateOf("" )
+    var especificaciones by mutableStateOf("")
     var estatus by mutableStateOf("")
     var fecha by mutableStateOf("")
+    var orden by mutableStateOf("")
+    var encargado by mutableStateOf("")
 
     var uiState = MutableStateFlow(TicketsListState())
         private set
@@ -64,7 +64,8 @@ class TicketApiViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
-    fun TicketbyId(id:Int){
+
+    fun TicketbyId(id: Int) {
         ticketId = id
         Limpiar()
         ticketRepository.getTicketsId(ticketId).onEach { result ->
@@ -74,7 +75,7 @@ class TicketApiViewModel @Inject constructor(
                 }
                 is Resource.Success -> {
                     uiStateTicket.update {
-                        it.copy(ticket = result.data )
+                        it.copy(ticket = result.data)
                     }
                     empresa = uiStateTicket.value.ticket!!.empresa
                     asunto = uiStateTicket.value.ticket!!.asunto
@@ -89,33 +90,41 @@ class TicketApiViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun putTicket(){
+    fun putTicket() {
         viewModelScope.launch {
-            ticketRepository.putTickets(ticketId, TicketDto(asunto,
-                empresa,
-                uiStateTicket.value.ticket!!.encargadoId,
-                especificaciones,
-                estatus,uiStateTicket.value.ticket!!.fecha,
-                uiStateTicket.value.ticket!!.orden,
-                ticketId = ticketId )
+            ticketRepository.putTickets(
+                ticketId, TicketDto(
+                    asunto,
+                    empresa,
+                    uiStateTicket.value.ticket!!.encargadoId,
+                    especificaciones,
+                    estatus, uiStateTicket.value.ticket!!.fecha,
+                    uiStateTicket.value.ticket!!.orden,
+                    ticketId = ticketId
+                )
             )
         }
     }
 
-    fun deleteTicket(){
+    fun postTicket() {
         viewModelScope.launch {
-            ticketRepository.deleteTickets(ticketId, TicketDto(asunto,
-                empresa,
-                uiStateTicket.value.ticket!!.encargadoId,
-                especificaciones,
-                estatus,uiStateTicket.value.ticket!!.fecha,
-                uiStateTicket.value.ticket!!.orden,
-                ticketId = ticketId )
+            ticketRepository.postTickets(
+                TicketDto(
+                   empresa = empresa,
+                    asunto = asunto,
+                    encargadoId = encargado.toIntOrNull()?: 0,
+                    especificaciones = especificaciones,
+                    fecha = fecha,
+                    orden = orden.toIntOrNull()?: 0,
+                    estatus = estatus,
+                    ticketId = 10
+                )
             )
         }
     }
 
-    private fun Limpiar(){
+
+    private fun Limpiar() {
         empresa = ""
         asunto = ""
         estatus = ""
