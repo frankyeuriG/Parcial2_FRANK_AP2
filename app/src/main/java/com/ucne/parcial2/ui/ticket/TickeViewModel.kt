@@ -95,32 +95,34 @@ class TicketApiViewModel @Inject constructor(
             ticketRepository.putTickets(
                 ticketId, TicketDto(
                     ticketId = ticketId,
-                    asunto,
-                    empresa,
-                    uiStateTicket.value.ticket!!.encargadoId,
-                    especificaciones,
-                    estatus,
                     uiStateTicket.value.ticket!!.fecha,
+                    empresa,
+                    asunto,
+                    especificaciones,
+                    uiStateTicket.value.ticket!!.encargadoId,
+                    estatus,
                     uiStateTicket.value.ticket!!.orden
                 )
             )
         }
     }
 
-  fun postTickets(){
-      viewModelScope.launch {
-          TicketDto(
-              asunto = asunto,
-              empresa = empresa,
-              encargadoId = encargadoId.toIntOrNull()?: 0,
-              especificaciones = especificaciones,
-              estatus = estatus,
-              fecha = fecha,
-              orden = orden.toIntOrNull()?: 0
-          )
-      }
-      Limpiar()
-  }
+    fun postTickets() {
+        viewModelScope.launch {
+            ticketRepository.postTickets(
+                TicketDto(
+                    fecha = fecha,
+                    empresa = empresa,
+                    asunto = asunto,
+                    especificaciones = especificaciones,
+                    encargadoId = encargadoId.toIntOrNull() ?: 0,
+                    estatus = estatus,
+                    orden = orden.toIntOrNull() ?: 0
+                )
+            )
+        }
+        Limpiar()
+    }
 
     private fun Limpiar() {
         asunto = ""
@@ -128,7 +130,7 @@ class TicketApiViewModel @Inject constructor(
         encargadoId = ""
         especificaciones = ""
         estatus = ""
-        fecha  = ""
+        fecha = ""
         orden = ""
     }
 }
