@@ -13,7 +13,7 @@ interface TicketsApi{
     suspend fun getTicketsId(@Path("id") id: Int): TicketDto
 
     @POST("/api/tickets")
-    suspend fun postTickets(@Body ticketDto: TicketDto): TicketDto
+    suspend fun postTickets(@Body ticketDto: TicketDto): Response<TicketDto>
 
     @PUT("/api/tickets/{id}")
     suspend fun putTickets(@Path("id") id: Int, @Body ticketDto: TicketDto): Response<Unit>
