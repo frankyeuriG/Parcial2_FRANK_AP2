@@ -19,14 +19,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ucne.parcial2.ui.navegacion.ScreenModule
 import java.util.*
 
 @Composable
 fun R_TicketsScreen(
+    navController: NavController,
     viewModel: TicketApiViewModel = hiltViewModel()
 ) {
     Column(Modifier.fillMaxWidth()) {
-        TicketBody(viewModel = viewModel)
+        TicketBody(viewModel = viewModel, navController = navController)
     }
 }
 
@@ -34,7 +36,8 @@ fun R_TicketsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TicketBody(
-    viewModel: TicketApiViewModel
+    viewModel: TicketApiViewModel,
+    navController: NavController
 ) {
     var expanded by remember { mutableStateOf(false) }
     val anio: Int
@@ -51,6 +54,7 @@ private fun TicketBody(
             viewModel.fecha = "$dia/${mes + 1}/$anio"
         }, anio, mes, dia
     )
+
     Column(
         Modifier
             .fillMaxWidth()
@@ -98,24 +102,6 @@ private fun TicketBody(
                     onValueChange = { viewModel.asunto = it })
 
 
-                OutlinedTextField(modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                    value = viewModel.fecha,
-                    onValueChange = { viewModel.fecha = it },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.DateRange,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(33.dp)
-                                .padding(4.dp)
-                                .clickable {
-                                    mDatePickerDialog.show()
-                                })
-                    },
-                    label = { Text(text = "Fecha") })
-
                 OutlinedTextField(
 
                     modifier = Modifier
@@ -128,28 +114,6 @@ private fun TicketBody(
                     label = { Text(text = "Estatus") },
                     onValueChange = { viewModel.estatus = it })
 
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    value = viewModel.orden,
-                    singleLine = true,
-                    maxLines = 1,
-                    onValueChange = { viewModel.orden = it },
-                    label = { Text("Orden") }
-                )
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    value = viewModel.encargadoId,
-                    singleLine = true,
-                    maxLines = 1,
-                    onValueChange = { viewModel.encargadoId = it },
-                    label = { Text("EncargadoId") }
-                )
 
                 OutlinedTextField(
                     modifier = Modifier
@@ -186,6 +150,7 @@ private fun TicketBody(
                         },
                         onClick = {
                             viewModel.postTickets()
+                            navController.navigate(ScreenModule.TicketsList.route)
                         }
                     )
                 }

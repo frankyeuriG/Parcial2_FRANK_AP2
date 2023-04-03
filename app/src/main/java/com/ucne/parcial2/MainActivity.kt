@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         composable(ScreenModule.R_ticktes.route){
-                            R_TicketsScreen()
+                            R_TicketsScreen(navController = navController)
                         }
                         composable(
                             route = ScreenModule.Tickets.route + "/{id}",

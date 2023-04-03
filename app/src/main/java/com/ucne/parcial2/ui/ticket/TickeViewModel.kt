@@ -33,14 +33,14 @@ data class TicketsState(
 class TicketApiViewModel @Inject constructor(
     private val ticketRepository: TicketRepositoryImp
 ) : ViewModel() {
-    var ticketId by mutableStateOf(0)
+    var ticketId by mutableStateOf(1)
     var empresa by mutableStateOf("")
     var asunto by mutableStateOf("")
     var especificaciones by mutableStateOf("")
     var estatus by mutableStateOf("")
-    var fecha by mutableStateOf("")
-    var orden by mutableStateOf("")
-    var encargadoId by mutableStateOf("")
+    var fecha by mutableStateOf("2023-04-01T19:23:59.770Z")
+    var orden by mutableStateOf(1)
+    var encargadoId by mutableStateOf(1)
 
     var uiState = MutableStateFlow(TicketsListState())
         private set
@@ -109,28 +109,31 @@ class TicketApiViewModel @Inject constructor(
 
     fun postTickets() {
         viewModelScope.launch {
+            if (encargadoId == null) {
+                encargadoId += 1
+            }
+            if (orden == null) {
+                orden += 1
+            }
             ticketRepository.postTickets(
                 TicketDto(
-                    fecha = fecha,
-                    empresa = empresa,
                     asunto = asunto,
+                    empresa = empresa,
+                    encargadoId = encargadoId,
                     especificaciones = especificaciones,
-                    encargadoId = encargadoId.toIntOrNull() ?: 0,
                     estatus = estatus,
-                    orden = orden.toIntOrNull() ?: 0
+                    fecha = "2023-04-01T19:23:59.770Z",
+                    orden = orden
                 )
             )
         }
-        Limpiar()
     }
 
     private fun Limpiar() {
         asunto = ""
         empresa = ""
-        encargadoId = ""
         especificaciones = ""
         estatus = ""
         fecha = ""
-        orden = ""
     }
 }

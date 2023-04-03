@@ -13,5 +13,5 @@ sealed class ScreenModule(val route: String, val title: String, val icon: ImageV
     object TicketsList :
         ScreenModule("tickets_list", "Lista de Tickets", Icons.TwoTone.ConfirmationNumber)
 
-    object R_ticktes: ScreenModule("Registro_Tickets", "Registro de Ticktes", Icons.TwoTone.Add)
+    object R_ticktes : ScreenModule("Registro_Tickets", "Registro de Ticktes", Icons.TwoTone.Add)
 }
